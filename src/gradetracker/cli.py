@@ -26,6 +26,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("mark", type=float)
     p.add_argument("--credits", type=int, default=10)
 
+    p = sub.add_parser("edit-grade", help="change the mark or credits of a module")
+    p.add_argument("student_id")
+    p.add_argument("module")
+    p.add_argument("--mark", type=float)
+    p.add_argument("--credits", type=int)
+
+    p = sub.add_parser("remove-grade", help="delete a module grade")
+    p.add_argument("student_id")
+    p.add_argument("module")
+
     p = sub.add_parser("report", help="show a student's grades and average")
     p.add_argument("student_id")
     return parser
@@ -41,6 +51,14 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "add-grade":
             book.add_grade(args.student_id, args.module, args.mark, args.credits)
             print(f"Recorded {args.mark} in {args.module} for {args.student_id}")
+        elif args.command == "edit-grade":
+            if args.mark is None and args.credits is None:
+                raise GradeError("Give --mark and/or --credits to change")
+            g = book.edit_grade(args.student_id, args.module, args.mark, args.credits)
+            print(f"Updated {g.module} for {args.student_id}: {g.mark} ({g.credits} credits)")
+        elif args.command == "remove-grade":
+            g = book.remove_grade(args.student_id, args.module)
+            print(f"Removed {g.module} for {args.student_id}")
         elif args.command == "report":
             student = book.get_student(args.student_id)
             print(f"Report for {student.name} ({student.student_id})")

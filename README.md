@@ -10,6 +10,7 @@ coursework project to practise Python, testing, Git branching and pull requests.
 
 - Add students with an ID and name
 - Record a mark (0–100) for each module, weighted by credits
+- Edit or remove a grade that was entered by mistake
 - Generate a report with a credit-weighted average and UK degree classification
 - Data saved locally as JSON
 
@@ -31,6 +32,8 @@ pip install -e ".[dev]"
 gradetracker add-student S001 "Ada Lovelace"
 gradetracker add-grade S001 "Programming 1" 72 --credits 20
 gradetracker add-grade S001 "Databases" 65 --credits 10
+gradetracker edit-grade S001 "Databases" --mark 68
+gradetracker remove-grade S001 "Databases"
 gradetracker report S001
 ```
 
