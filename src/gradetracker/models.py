@@ -49,6 +49,17 @@ class Student:
     def add_grade(self, grade: Grade) -> None:
         self.grades.append(grade)
 
+    def find_grade(self, module: str) -> Grade:
+        for grade in self.grades:
+            if grade.module.lower() == module.lower():
+                return grade
+        raise GradeError(f"{self.student_id} has no grade for {module}")
+
+    def remove_grade(self, module: str) -> Grade:
+        grade = self.find_grade(module)
+        self.grades.remove(grade)
+        return grade
+
     def total_credits(self) -> int:
         return sum(g.credits for g in self.grades)
 
@@ -84,3 +95,16 @@ class GradeBook:
         grade = Grade(module, mark, credits)
         self.get_student(student_id).add_grade(grade)
         return grade
+
+    def edit_grade(self, student_id: str, module: str, mark: float | None = None,
+                   credits: int | None = None) -> Grade:
+        student = self.get_student(student_id)
+        old = student.find_grade(module)
+        new = Grade(old.module,
+                    old.mark if mark is None else mark,
+                    old.credits if credits is None else credits)
+        student.grades[student.grades.index(old)] = new
+        return new
+
+    def remove_grade(self, student_id: str, module: str) -> Grade:
+        return self.get_student(student_id).remove_grade(module)

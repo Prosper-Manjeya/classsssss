@@ -23,3 +23,13 @@ def test_report_for_student_without_grades(tmp_path, capsys):
     main(["--file", f, "add-student", "S002", "Bob"])
     assert main(["--file", f, "report", "S002"]) == 0
     assert "0.00" in capsys.readouterr().out
+
+
+def test_edit_and_remove_grade(tmp_path, capsys):
+    f = str(tmp_path / "g.json")
+    main(["--file", f, "add-student", "S001", "Ada"])
+    main(["--file", f, "add-grade", "S001", "Databases", "50"])
+    assert main(["--file", f, "edit-grade", "S001", "Databases", "--mark", "65"]) == 0
+    assert main(["--file", f, "edit-grade", "S001", "Databases"]) == 1
+    assert main(["--file", f, "remove-grade", "S001", "Databases"]) == 0
+    assert main(["--file", f, "remove-grade", "S001", "Databases"]) == 1
