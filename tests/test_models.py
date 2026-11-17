@@ -34,7 +34,6 @@ def test_weighted_average():
     assert s.total_credits() == 30
 
 
-@pytest.mark.xfail(reason="bug #8: division by zero with no grades", strict=True)
 def test_weighted_average_no_grades():
     s = Student("S002", "Bob")
     assert s.weighted_average() == 0.0
