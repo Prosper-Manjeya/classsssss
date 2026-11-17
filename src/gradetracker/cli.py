@@ -1,0 +1,58 @@
+"""Command-line interface for the grade tracker."""
+
+from __future__ import annotations
+
+import argparse
+import sys
+
+from . import storage
+from .models import GradeError
+
+DEFAULT_FILE = "grades.json"
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="gradetracker", description=__doc__)
+    parser.add_argument("--file", default=DEFAULT_FILE, help="data file (default: grades.json)")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    p = sub.add_parser("add-student", help="add a new student")
+    p.add_argument("student_id")
+    p.add_argument("name")
+
+    p = sub.add_parser("add-grade", help="record a module mark")
+    p.add_argument("student_id")
+    p.add_argument("module")
+    p.add_argument("mark", type=float)
+    p.add_argument("--credits", type=int, default=10)
+
+    p = sub.add_parser("report", help="show a student's grades and average")
+    p.add_argument("student_id")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    book = storage.load(args.file)
+    try:
+        if args.command == "add-student":
+            book.add_student(args.student_id, args.name)
+            print(f"Added student {args.student_id}: {args.name}")
+        elif args.command == "add-grade":
+            book.add_grade(args.student_id, args.module, args.mark, args.credits)
+            print(f"Recorded {args.mark} in {args.module} for {args.student_id}")
+        elif args.command == "report":
+            student = book.get_student(args.student_id)
+            print(f"Report for {student.name} ({student.student_id})")
+            for g in student.grades:
+                print(f"  {g.module:<25} {g.mark:>6.1f}  ({g.credits} credits)")
+            print(f"  Weighted average: {student.weighted_average():.2f}")
+    except GradeError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+    storage.save(book, args.file)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
