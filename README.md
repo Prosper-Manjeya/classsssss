@@ -1,5 +1,7 @@
 # Grade Tracker
 
+![Tests](https://github.com/Prosper-Manjeya/classsssss/actions/workflows/tests.yml/badge.svg)
+
 A small command-line application for recording university module marks and
 calculating credit-weighted averages. Built as a software development
 coursework project to practise Python, testing, Git branching and pull requests.
