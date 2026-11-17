@@ -1,6 +1,6 @@
 import pytest
 
-from gradetracker.models import Grade, GradeBook, GradeError, Student
+from gradetracker.models import Grade, GradeBook, GradeError, Student, classify
 
 
 def test_valid_grade():
@@ -62,3 +62,20 @@ def test_add_grade_through_book():
     book.add_student("S001", "Ada")
     book.add_grade("S001", "Networks", 58, 15)
     assert book.get_student("S001").grades[0].module == "Networks"
+
+
+@pytest.mark.parametrize(
+    "average, expected",
+    [
+        (85, "First"),
+        (70, "First"),
+        (69.99, "Upper second (2:1)"),
+        (60, "Upper second (2:1)"),
+        (55, "Lower second (2:2)"),
+        (40, "Third"),
+        (39.5, "Fail"),
+        (0, "Fail"),
+    ],
+)
+def test_classify(average, expected):
+    assert classify(average) == expected
