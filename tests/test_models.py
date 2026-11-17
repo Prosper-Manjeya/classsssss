@@ -79,3 +79,35 @@ def test_add_grade_through_book():
 )
 def test_classify(average, expected):
     assert classify(average) == expected
+
+
+def _book_with_grade():
+    book = GradeBook()
+    book.add_student("S001", "Ada")
+    book.add_grade("S001", "Networks", 58, 15)
+    return book
+
+
+def test_edit_grade_mark():
+    book = _book_with_grade()
+    book.edit_grade("S001", "networks", mark=64)
+    g = book.get_student("S001").grades[0]
+    assert (g.mark, g.credits) == (64, 15)
+
+
+def test_edit_grade_validates():
+    book = _book_with_grade()
+    with pytest.raises(GradeError):
+        book.edit_grade("S001", "Networks", mark=120)
+    assert book.get_student("S001").grades[0].mark == 58
+
+
+def test_remove_grade():
+    book = _book_with_grade()
+    book.remove_grade("S001", "Networks")
+    assert book.get_student("S001").grades == []
+
+
+def test_remove_missing_grade():
+    with pytest.raises(GradeError):
+        _book_with_grade().remove_grade("S001", "Maths")
