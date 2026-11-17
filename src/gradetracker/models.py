@@ -37,9 +37,12 @@ class Student:
         return sum(g.credits for g in self.grades)
 
     def weighted_average(self) -> float:
-        """Credit-weighted average mark across all modules."""
+        """Credit-weighted average mark across all modules (0.0 if none)."""
+        total = self.total_credits()
+        if total == 0:
+            return 0.0
         weighted = sum(g.mark * g.credits for g in self.grades)
-        return round(weighted / self.total_credits(), 2)
+        return round(weighted / total, 2)
 
 
 class GradeBook:
