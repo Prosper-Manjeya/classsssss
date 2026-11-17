@@ -6,7 +6,7 @@ import argparse
 import sys
 
 from . import storage
-from .models import GradeError
+from .models import GradeError, classify
 
 DEFAULT_FILE = "grades.json"
 
@@ -46,7 +46,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Report for {student.name} ({student.student_id})")
             for g in student.grades:
                 print(f"  {g.module:<25} {g.mark:>6.1f}  ({g.credits} credits)")
-            print(f"  Weighted average: {student.weighted_average():.2f}")
+            average = student.weighted_average()
+            print(f"  Weighted average: {average:.2f}")
+            if student.grades:
+                print(f"  Classification:   {classify(average)}")
     except GradeError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1

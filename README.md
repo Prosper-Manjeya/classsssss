@@ -10,7 +10,7 @@ coursework project to practise Python, testing, Git branching and pull requests.
 
 - Add students with an ID and name
 - Record a mark (0–100) for each module, weighted by credits
-- Generate a report with a credit-weighted average
+- Generate a report with a credit-weighted average and UK degree classification
 - Data saved locally as JSON
 
 ## Getting started
