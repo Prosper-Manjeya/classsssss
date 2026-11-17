@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import storage
+from . import export, storage
 from .models import GradeError, classify
 
 DEFAULT_FILE = "grades.json"
@@ -38,6 +38,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("report", help="show a student's grades and average")
     p.add_argument("student_id")
+    p.add_argument("--csv", metavar="FILE", help="also save the report as a CSV file")
     return parser
 
 
@@ -68,6 +69,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  Weighted average: {average:.2f}")
             if student.grades:
                 print(f"  Classification:   {classify(average)}")
+            if args.csv:
+                export.write_csv(student, args.csv)
+                print(f"Saved CSV report to {args.csv}")
     except GradeError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1

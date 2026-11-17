@@ -12,6 +12,7 @@ coursework project to practise Python, testing, Git branching and pull requests.
 - Record a mark (0–100) for each module, weighted by credits
 - Edit or remove a grade that was entered by mistake
 - Generate a report with a credit-weighted average and UK degree classification
+- Export a report to CSV for Excel
 - Data saved locally as JSON
 
 ## Getting started
@@ -35,6 +36,7 @@ gradetracker add-grade S001 "Databases" 65 --credits 10
 gradetracker edit-grade S001 "Databases" --mark 68
 gradetracker remove-grade S001 "Databases"
 gradetracker report S001
+gradetracker report S001 --csv ada.csv
 ```
 
 By default data is stored in `grades.json` in the current folder. Use
