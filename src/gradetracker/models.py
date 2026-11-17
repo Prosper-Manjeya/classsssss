@@ -5,6 +5,22 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 
+CLASSIFICATION_BOUNDARIES = [
+    (70, "First"),
+    (60, "Upper second (2:1)"),
+    (50, "Lower second (2:2)"),
+    (40, "Third"),
+]
+
+
+def classify(average: float) -> str:
+    """Return the UK degree classification for a weighted average."""
+    for boundary, label in CLASSIFICATION_BOUNDARIES:
+        if average >= boundary:
+            return label
+    return "Fail"
+
+
 class GradeError(ValueError):
     """Raised when a grade or student operation is invalid."""
 

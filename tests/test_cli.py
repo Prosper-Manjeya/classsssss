@@ -9,6 +9,7 @@ def test_full_workflow(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "Programming 1" in out
     assert "72.00" in out
+    assert "First" in out
 
 
 def test_unknown_student_returns_error(tmp_path, capsys):
