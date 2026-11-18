@@ -11,6 +11,7 @@ coursework project to practise Python, testing, Git branching and pull requests.
 - Add students with an ID and name
 - Record a mark (0–100) for each module, weighted by credits
 - Edit or remove a grade that was entered by mistake
+- List all students, sorted by ID, name or average
 - Generate a report with a credit-weighted average and UK degree classification
 - Export a report to CSV for Excel
 - Data saved locally as JSON
@@ -35,6 +36,7 @@ gradetracker add-grade S001 "Programming 1" 72 --credits 20
 gradetracker add-grade S001 "Databases" 65 --credits 10
 gradetracker edit-grade S001 "Databases" --mark 68
 gradetracker remove-grade S001 "Databases"
+gradetracker list --sort average
 gradetracker report S001
 gradetracker report S001 --csv ada.csv
 ```

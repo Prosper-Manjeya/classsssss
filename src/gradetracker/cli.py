@@ -37,6 +37,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("student_id")
     p.add_argument("module")
 
+    p = sub.add_parser("list", help="list all students with their averages")
+    p.add_argument("--sort", choices=["id", "name", "average"], default="id")
+
     p = sub.add_parser("report", help="show a student's grades and average")
     p.add_argument("student_id")
     p.add_argument("--csv", metavar="FILE", help="also save the report as a CSV file")
@@ -61,6 +64,13 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "remove-grade":
             g = book.remove_grade(args.student_id, args.module)
             print(f"Removed {g.module} for {args.student_id}")
+        elif args.command == "list":
+            students = book.sorted_students(args.sort)
+            if not students:
+                print("No students yet. Add one with add-student.")
+            for st in students:
+                avg = f"{st.weighted_average():6.2f}" if st.grades else "     -"
+                print(f"{st.student_id:<8} {st.name:<25} {avg}  ({len(st.grades)} modules)")
         elif args.command == "report":
             student = book.get_student(args.student_id)
             print(f"Report for {student.name} ({student.student_id})")
