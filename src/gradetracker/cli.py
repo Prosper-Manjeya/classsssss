@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import __version__, export, storage
+from . import __version__, export, stats, storage
 from .models import GradeError, classify
 
 DEFAULT_FILE = "grades.json"
@@ -40,6 +40,9 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("list", help="list all students with their averages")
     p.add_argument("--sort", choices=["id", "name", "average"], default="id")
 
+    p = sub.add_parser("stats", help="show statistics for a module (or list modules)")
+    p.add_argument("module", nargs="?")
+
     p = sub.add_parser("report", help="show a student's grades and average")
     p.add_argument("student_id")
     p.add_argument("--csv", metavar="FILE", help="also save the report as a CSV file")
@@ -71,6 +74,16 @@ def main(argv: list[str] | None = None) -> int:
             for st in students:
                 avg = f"{st.weighted_average():6.2f}" if st.grades else "     -"
                 print(f"{st.student_id:<8} {st.name:<25} {avg}  ({len(st.grades)} modules)")
+        elif args.command == "stats":
+            if args.module is None:
+                names = stats.module_names(book)
+                print("\n".join(names) if names else "No modules recorded yet.")
+            else:
+                ms = stats.module_stats(book, args.module)
+                print(f"{ms.module}: {ms.count} students")
+                print(f"  Mean {ms.mean:.2f} | Median {ms.median:.2f} | "
+                      f"Min {ms.minimum:g} | Max {ms.maximum:g}")
+                print(f"  Pass rate (40+): {ms.pass_rate:.1f}%")
         elif args.command == "report":
             student = book.get_student(args.student_id)
             print(f"Report for {student.name} ({student.student_id})")
