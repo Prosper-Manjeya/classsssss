@@ -85,6 +85,16 @@ class GradeBook:
         self.students[student_id] = student
         return student
 
+    def sorted_students(self, by: str = "id") -> list[Student]:
+        """Students sorted by ``id``, ``name`` or ``average`` (highest first)."""
+        if by == "name":
+            return sorted(self.students.values(), key=lambda s: s.name.lower())
+        if by == "average":
+            return sorted(self.students.values(), key=lambda s: s.weighted_average(), reverse=True)
+        if by == "id":
+            return sorted(self.students.values(), key=lambda s: s.student_id)
+        raise GradeError(f"Cannot sort by {by!r}")
+
     def get_student(self, student_id: str) -> Student:
         try:
             return self.students[student_id]

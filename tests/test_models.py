@@ -111,3 +111,19 @@ def test_remove_grade():
 def test_remove_missing_grade():
     with pytest.raises(GradeError):
         _book_with_grade().remove_grade("S001", "Maths")
+
+
+def test_sorted_students():
+    book = GradeBook()
+    book.add_student("S002", "bob")
+    book.add_student("S001", "Ada")
+    book.add_grade("S002", "Maths", 80)
+    book.add_grade("S001", "Maths", 60)
+    assert [s.student_id for s in book.sorted_students()] == ["S001", "S002"]
+    assert [s.name for s in book.sorted_students("name")] == ["Ada", "bob"]
+    assert [s.student_id for s in book.sorted_students("average")] == ["S002", "S001"]
+
+
+def test_sorted_students_bad_key():
+    with pytest.raises(GradeError):
+        GradeBook().sorted_students("height")

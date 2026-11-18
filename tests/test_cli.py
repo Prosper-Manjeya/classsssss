@@ -57,3 +57,20 @@ def test_run_as_module(tmp_path):
     )
     assert result.returncode == 0
     assert "Added student S001" in result.stdout
+
+
+def test_list_students(tmp_path, capsys):
+    f = str(tmp_path / "g.json")
+    main(["--file", f, "add-student", "S001", "Ada"])
+    main(["--file", f, "add-student", "S002", "Bob"])
+    main(["--file", f, "add-grade", "S002", "Maths", "80"])
+    capsys.readouterr()
+    assert main(["--file", f, "list", "--sort", "average"]) == 0
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0].startswith("S002")
+    assert "1 modules" in lines[0]
+
+
+def test_list_empty(tmp_path, capsys):
+    assert main(["--file", str(tmp_path / "g.json"), "list"]) == 0
+    assert "No students yet" in capsys.readouterr().out
