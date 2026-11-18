@@ -85,6 +85,10 @@ tests/              pytest test suite
 Work happens on short-lived branches (`feature/…`, `fix/…`, `docs/…`, `ci/…`)
 that are merged into `main` through pull requests linked to issues.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Changes are listed in [CHANGELOG.md](CHANGELOG.md).
+
 ## Author
 
 Prosper Manjeya
