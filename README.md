@@ -1,5 +1,7 @@
 # Grade Tracker
 
+![Tests](https://github.com/Prosper-Manjeya/classsssss/actions/workflows/tests.yml/badge.svg)
+
 A small command-line application for recording university module marks and
 calculating credit-weighted averages. Built as a software development
 coursework project to practise Python, testing, Git branching and pull requests.
@@ -8,7 +10,12 @@ coursework project to practise Python, testing, Git branching and pull requests.
 
 - Add students with an ID and name
 - Record a mark (0–100) for each module, weighted by credits
-- Generate a report with a credit-weighted average
+- Edit or remove a grade that was entered by mistake
+- List all students, sorted by ID, name or average
+- Module statistics: mean, median, range and pass rate
+- Generate a report with a credit-weighted average and UK degree classification
+- Import many grades at once from a CSV file
+- Export a report to CSV for Excel
 - Data saved locally as JSON
 
 ## Getting started
@@ -29,11 +36,36 @@ pip install -e ".[dev]"
 gradetracker add-student S001 "Ada Lovelace"
 gradetracker add-grade S001 "Programming 1" 72 --credits 20
 gradetracker add-grade S001 "Databases" 65 --credits 10
+gradetracker edit-grade S001 "Databases" --mark 68
+gradetracker remove-grade S001 "Databases"
+gradetracker list --sort average
+gradetracker stats "Databases"
 gradetracker report S001
+gradetracker report S001 --csv ada.csv
 ```
+
+You can also run it as a module: `python -m gradetracker --help`.
+Use `gradetracker --version` to check the installed version.
 
 By default data is stored in `grades.json` in the current folder. Use
 `--file path/to/data.json` to choose another location.
+
+### Importing from CSV
+
+```bash
+gradetracker import-csv marks.csv
+```
+
+The file needs a header row with `student_id`, `module` and `mark`. Add `name`
+for students who don't exist yet, and optionally `credits` (defaults to 10):
+
+```csv
+student_id,name,module,mark,credits
+S001,Ada Lovelace,Programming 1,72,20
+S002,Alan Turing,Programming 1,81,20
+```
+
+Rows with problems are skipped and listed so you can fix them.
 
 ## Running the tests
 
@@ -52,6 +84,10 @@ tests/              pytest test suite
 
 Work happens on short-lived branches (`feature/…`, `fix/…`, `docs/…`, `ci/…`)
 that are merged into `main` through pull requests linked to issues.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Changes are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Author
 
