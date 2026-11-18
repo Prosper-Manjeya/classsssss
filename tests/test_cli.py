@@ -1,3 +1,10 @@
+import os
+import subprocess
+import sys
+
+import pytest
+
+from gradetracker import __version__
 from gradetracker.cli import main
 
 
@@ -33,3 +40,20 @@ def test_edit_and_remove_grade(tmp_path, capsys):
     assert main(["--file", f, "edit-grade", "S001", "Databases"]) == 1
     assert main(["--file", f, "remove-grade", "S001", "Databases"]) == 0
     assert main(["--file", f, "remove-grade", "S001", "Databases"]) == 1
+
+
+def test_version_flag(capsys):
+    with pytest.raises(SystemExit) as exc:
+        main(["--version"])
+    assert exc.value.code == 0
+    assert __version__ in capsys.readouterr().out
+
+
+def test_run_as_module(tmp_path):
+    result = subprocess.run(
+        [sys.executable, "-m", "gradetracker", "--file", str(tmp_path / "g.json"),
+         "add-student", "S001", "Ada"],
+        capture_output=True, text=True, env={**os.environ, "PYTHONPATH": "src"},
+    )
+    assert result.returncode == 0
+    assert "Added student S001" in result.stdout

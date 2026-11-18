@@ -39,6 +39,9 @@ gradetracker report S001
 gradetracker report S001 --csv ada.csv
 ```
 
+You can also run it as a module: `python -m gradetracker --help`.
+Use `gradetracker --version` to check the installed version.
+
 By default data is stored in `grades.json` in the current folder. Use
 `--file path/to/data.json` to choose another location.
 

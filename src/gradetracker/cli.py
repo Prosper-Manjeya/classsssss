@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import export, storage
+from . import __version__, export, storage
 from .models import GradeError, classify
 
 DEFAULT_FILE = "grades.json"
@@ -14,6 +14,7 @@ DEFAULT_FILE = "grades.json"
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="gradetracker", description=__doc__)
     parser.add_argument("--file", default=DEFAULT_FILE, help="data file (default: grades.json)")
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("add-student", help="add a new student")
