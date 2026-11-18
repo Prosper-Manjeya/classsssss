@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import __version__, export, stats, storage
+from . import __version__, export, importer, stats, storage
 from .models import GradeError, classify
 
 DEFAULT_FILE = "grades.json"
@@ -26,6 +26,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("module")
     p.add_argument("mark", type=float)
     p.add_argument("--credits", type=int, default=10)
+
+    p = sub.add_parser("import-csv", help="import many grades from a CSV file")
+    p.add_argument("csv_file")
 
     p = sub.add_parser("edit-grade", help="change the mark or credits of a module")
     p.add_argument("student_id")
@@ -59,6 +62,11 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "add-grade":
             book.add_grade(args.student_id, args.module, args.mark, args.credits)
             print(f"Recorded {args.mark} in {args.module} for {args.student_id}")
+        elif args.command == "import-csv":
+            res = importer.import_csv(book, args.csv_file)
+            print(f"Imported {res.imported} grades ({res.new_students} new students)")
+            for err in res.errors:
+                print(f"  Skipped {err}", file=sys.stderr)
         elif args.command == "edit-grade":
             if args.mark is None and args.credits is None:
                 raise GradeError("Give --mark and/or --credits to change")

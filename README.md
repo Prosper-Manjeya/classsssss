@@ -14,6 +14,7 @@ coursework project to practise Python, testing, Git branching and pull requests.
 - List all students, sorted by ID, name or average
 - Module statistics: mean, median, range and pass rate
 - Generate a report with a credit-weighted average and UK degree classification
+- Import many grades at once from a CSV file
 - Export a report to CSV for Excel
 - Data saved locally as JSON
 
@@ -48,6 +49,23 @@ Use `gradetracker --version` to check the installed version.
 
 By default data is stored in `grades.json` in the current folder. Use
 `--file path/to/data.json` to choose another location.
+
+### Importing from CSV
+
+```bash
+gradetracker import-csv marks.csv
+```
+
+The file needs a header row with `student_id`, `module` and `mark`. Add `name`
+for students who don't exist yet, and optionally `credits` (defaults to 10):
+
+```csv
+student_id,name,module,mark,credits
+S001,Ada Lovelace,Programming 1,72,20
+S002,Alan Turing,Programming 1,81,20
+```
+
+Rows with problems are skipped and listed so you can fix them.
 
 ## Running the tests
 
